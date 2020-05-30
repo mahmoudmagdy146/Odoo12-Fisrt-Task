@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="order_report_id"
+                string='Order'
+                model="odoo12task.odoo12task"
+                report_type="qweb-pdf"
+                name="odoo12task.order_report_details_id"
+                file="odoo12task.order_report_details_id"
+                print_report_name="'Order_Report_Details - %s' % (object.name)"
+        />
+    </data>
+</odoo>
+

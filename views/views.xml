@@ -1,0 +1,98 @@
+<odoo>
+    <data>
+        <menuitem id="order_menu_root"
+                  name="Orders"
+                  sequence="2"/>
+        <record id="order_form_id" model="ir.ui.view">
+            <field name="name">order.form.id</field>
+            <field name="model">odoo12task.odoo12task</field>
+            <field name="arch" type="xml">
+                <form string="Order Form">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="partner_id" widget="res_partner_many2one"
+                                   context="{'search_default_customer':1, 'show_address': 1, 'show_vat': True}"
+                            />
+                            <field name="date_order" string="Order Date"/>
+                        </group>
+                        <notebook>
+                            <page string="Order Lines">
+                                <field name="order_line" nolabel="1">
+                                    <tree editable="bottom">
+                                        <field name="product_id" context="{
+                                            'partner_id': parent.partner_id,
+                                            'quantity': product_uom_qty,
+                                            'default_lst_price': price_unit,
+                                            'default_description_sale': name
+                                        }"/>
+                                        <field name="name" widget="section_and_note_text"/>
+                                        <field name="product_uom_qty" string="Ordered Qty"
+                                               context="{
+                                            'partner_id': parent.partner_id,
+                                            'quantity': product_uom_qty,
+                                        }"/>
+                                        <field name="price_unit"/>
+                                        <field name="tax_id" widget="many2many_tags" options="{'no_create': True}"/>
+                                        <field name="discount"/>
+                                        <field name="price_subtotal" widget="monetary"/>
+                                        <field name="price_total" widget="monetary"/>
+                                        <field name="price_tax" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget="monetary" />
+                                    <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                        <label for="amount_total" />
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator"
+                                           widget="monetary"/>
+                                </group>
+                                <field name="note" class="oe_inline"
+                                       placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
+                                <div class="oe_clear"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="order_tree_id" model="ir.ui.view">
+            <field name="name">order.tree.id</field>
+            <field name="model">odoo12task.odoo12task</field>
+            <field name="arch" type="xml">
+                <tree string="Orders">
+                    <field name="name" string="Order Number"/>
+                    <field name="date_order" string="Order Date"/>
+                    <field name="partner_id"/>
+                    <field name="current_user"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_orders" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">odoo12task.odoo12task</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Order, the first step of a new sale!
+                </p>
+            </field>
+        </record>
+        <menuitem id="menu_order_seq"
+            name="Orderss"
+            action="action_orders"
+            parent="order_menu_root"
+            sequence="2" />
+
+    </data>
+</odoo>
